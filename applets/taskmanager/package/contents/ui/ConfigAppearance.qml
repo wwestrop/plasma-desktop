@@ -28,6 +28,7 @@ KCMUtils.SimpleKCM {
     property alias cfg_forceStripes: forceStripes.checked
     property alias cfg_taskMaxWidth: taskMaxWidth.currentIndex
     property int cfg_iconSpacing: 0
+    property int cfg_windowPreviewStyle
 
     Component.onCompleted: {
         /* Don't rely on bindings for checking the radiobuttons
@@ -49,6 +50,33 @@ KCMUtils.SimpleKCM {
             text: i18nc("@option:check section General", "Show small window previews when hovering over tasks")
         }
 
+        QQC2.ButtonGroup {
+            id: windowPreviewStyleRadioButtonGroup
+        }
+
+        QQC2.RadioButton {
+            id: windowPreviewStyle0
+            QQC2.ButtonGroup.group: windowPreviewStyleRadioButtonGroup
+            property int index: 0
+            leftPadding: mirrored ? 0 : (showToolTips.indicator.width + showToolTips.spacing)
+            rightPadding: mirrored ? (showToolTips.indicator.width + showToolTips.spacing) : 0
+            enabled: showToolTips.checked
+            checked: cfg_windowPreviewStyle === 0
+            onToggled: if (checked) cfg_windowPreviewStyle = 0;
+            text: i18nc("@option:radio completes sentence: When previews don't fit on screen", "Scroll if previews don't fit on screen")
+        }
+
+        QQC2.RadioButton {
+            id: windowPreviewStyle1
+            QQC2.ButtonGroup.group: windowPreviewStyleRadioButtonGroup
+            property int index: 1
+            leftPadding: mirrored ? 0 : (showToolTips.indicator.width + showToolTips.spacing)
+            rightPadding: mirrored ? (showToolTips.indicator.width + showToolTips.spacing) : 0
+            enabled: showToolTips.checked
+            checked: cfg_windowPreviewStyle === 1
+            onToggled: if (checked) cfg_windowPreviewStyle = 1;
+            text: i18nc("@option:radio completes sentence: When previews don't fit on screen", "Shrink previews to fit")
+        }
         QQC2.CheckBox {
             id: highlightWindows
             text: i18nc("@option:check section General", "Hide other windows when hovering over previews")

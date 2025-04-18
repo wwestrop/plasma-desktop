@@ -75,6 +75,14 @@
       <label>Whether to show tooltips when hovering task buttons.</label>
       <default>true</default>
     </entry>
+    <entry name="windowPreviewStyle" type="Enum">
+      <label>How to display window previews when they don't fit on screen.</label>
+      <choices>
+        <choice name="ScrollOverflow"/>
+        <choice name="ShrinkToFit"/>
+      </choices>
+      <default>0</default>
+    </entry>
     <entry name="taskMaxWidth" type="Enum">
       <label>Tune the max width of task items.</label>
       <choices>
