@@ -32,6 +32,7 @@ ColumnLayout {
     required property bool isOnAllVirtualDesktops
     required property /*list<var>*/ var virtualDesktops // Can't use list<var> because of QTBUG-127600
     required property list<string> activities
+    property int toolTipSize: Kirigami.Units.gridUnit * 16 // TODO share the constant with toolTipDelegate if possible
 
     property bool hasTrackInATitle: false
     property int orientation: ListView.Vertical // vertical for compact single-window tooltips
@@ -83,7 +84,7 @@ ColumnLayout {
         Layout.fillWidth: true
 
         // This number controls the overall size of the window tooltips
-        Layout.maximumWidth: toolTipDelegate.tooltipInstanceMaximumWidth
+        Layout.maximumWidth: toolTipSize
         Layout.minimumWidth: (toolTipDelegate.isWin && Plasmoid.configuration.showToolTips) || toolTipDelegate.isGroup ? Layout.maximumWidth : 0
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         // match margins of DefaultToolTip.qml in plasma-framework
