@@ -53,6 +53,8 @@ Loader {
 
     readonly property bool isVerticalPanel: Plasmoid.formFactor === PlasmaCore.Types.Vertical
 
+    readonly property int preferredToolTipSize: Kirigami.Units.gridUnit * 16
+
     // These properties are required to make tooltip interactive when there is a player but no window is present.
     readonly property Mpris.PlayerContainer playerData: mpris2Source.playerForLauncherUrl(launcherUrl, pidParent)
 
@@ -76,6 +78,7 @@ Loader {
             isOnAllVirtualDesktops: toolTipDelegate.isOnAllVirtualDesktops
             virtualDesktops: toolTipDelegate.virtualDesktops
             activities: toolTipDelegate.activities
+            toolTipSize: toolTipDelegate.preferredToolTipSize
         }
     }
 
@@ -113,28 +116,26 @@ Loader {
                 id: delegateModel
 
                 // This controls the overall size of the window tooltips
-                readonly property int preferredToolTipInstanceSize: {
-                    const preferredToolTipSize = Kirigami.Units.gridUnit * 16;
-
+                readonly property int computedToolTipSize: {
                     if (count === 0) {
-                        return preferredToolTipSize;
+                        return toolTipDelegate.preferredToolTipSize;
                     }
 
-                    if (Plasmoid.config.windowPreviewStyle === 1) {
+                    if (Plasmoid.configuration.windowPreviewStyle === 1) {
                         let screenSize = isVerticalPanel
-                            ? Screen.desktopAvailableHeight
-                            : Screen.desktopAvailableWidth;
+                            ? toolTipDelegate.Screen.height
+                            : toolTipDelegate.Screen.width;
 
                         let toolTipWidth = Math.floor((screenSize - (Kirigami.Units.gridUnit * count + Kirigami.Units.gridUnit)) / count);
-                        return Math.min(toolTipWidth, preferredToolTipSize);
+                        return Math.min(toolTipWidth, toolTipDelegate.preferredToolTipSize);
                     }
 
-                    return preferredToolTipSize;
+                    return toolTipDelegate.preferredToolTipSize;
                 }
 
                 // On Wayland, a tooltip has a significant resizing process, so estimate the size first.
-                readonly property real estimatedWidth: (toolTipDelegate.isVerticalPanel || !Plasmoid.configuration.showToolTips ? 1 : count) * (preferredToolTipInstanceSize + Kirigami.Units.gridUnit) - Kirigami.Units.gridUnit
-                readonly property real estimatedHeight: (toolTipDelegate.isVerticalPanel || !Plasmoid.configuration.showToolTips ? count : 1) * (Plasmoid.configuration.showToolTips ? (preferredToolTipInstanceSize / 2 + Kirigami.Units.gridUnit) : Kirigami.Units.gridUnit * 2) - Kirigami.Units.gridUnit
+                readonly property real estimatedWidth: (toolTipDelegate.isVerticalPanel || !Plasmoid.configuration.showToolTips ? 1 : count) * (computedToolTipSize + Kirigami.Units.gridUnit) - Kirigami.Units.gridUnit
+                readonly property real estimatedHeight: (toolTipDelegate.isVerticalPanel || !Plasmoid.configuration.showToolTips ? count : 1) * (Plasmoid.configuration.showToolTips ? (computedToolTipSize / 2 + Kirigami.Units.gridUnit) : Kirigami.Units.gridUnit * 2) - Kirigami.Units.gridUnit
 
                 model: tasksModel
 
@@ -153,7 +154,7 @@ Loader {
                     activities: model.Activities
                     hasTrackInATitle: groupToolTipListView.hasTrackInATitle
                     orientation: groupToolTipListView.orientation
-                    toolTipSize: delegateModel.preferredToolTipInstanceSize
+                    toolTipSize: delegateModel.computedToolTipSize
                 }
             }
         }
