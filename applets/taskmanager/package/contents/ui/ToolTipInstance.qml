@@ -41,6 +41,9 @@ ColumnLayout {
     ListView.onPooled: width = height = 0
     ListView.onReused: width = height = undefined
 
+    Layout.preferredHeight: orientation === ListView.Horizontal ? 0 : toolTipSize
+    height: orientation === ListView.Horizontal ? undefined : toolTipSize
+
     readonly property string title: {
         if (!toolTipDelegate.isWin) {
             return toolTipDelegate.genericName;
@@ -84,7 +87,7 @@ ColumnLayout {
         Layout.fillWidth: true
 
         // This number controls the overall size of the window tooltips
-        Layout.maximumWidth: toolTipSize
+        Layout.maximumWidth: root.orientation === ListView.Horizontal ? toolTipSize : toolTipDelegate.preferredToolTipSize
         Layout.minimumWidth: (toolTipDelegate.isWin && Plasmoid.configuration.showToolTips) || toolTipDelegate.isGroup ? Layout.maximumWidth : 0
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         // match margins of DefaultToolTip.qml in plasma-framework
@@ -220,7 +223,8 @@ ColumnLayout {
         id: thumbnailSourceItem
 
         Layout.fillWidth: true
-        Layout.preferredHeight: Kirigami.Units.gridUnit * 8
+        Layout.preferredHeight: root.orientation === ListView.Horizontal ? Kirigami.Units.gridUnit * 8 : 0
+        Layout.fillHeight: true
 
         clip: true
         visible: Plasmoid.configuration.showToolTips && toolTipDelegate.isWin
